@@ -25,7 +25,7 @@ class SetWayPointNode(Node):
     
     def compute_heading_error(self):
         theta_desire=self.compute_desired_theta()
-        return math.atan(math.tan((theta_desire-self.turtle_pose.theta/2)))
+        return math.atan(math.tan((theta_desire-self.turtle_pose.theta)/2))
     
     def publish_cmd_callback(self):
         Kp=0.5
