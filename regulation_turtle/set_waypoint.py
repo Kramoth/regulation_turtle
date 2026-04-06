@@ -3,7 +3,8 @@
 import rclpy
 from rclpy.node import Node
 from turtlesim.msg import Pose
-from geometry_msgs.msg import Twist    
+from geometry_msgs.msg import Twist
+from turtle_interfaces.srv import SetWayPoint    
 import math
     
 class SetWayPointNode(Node):
@@ -11,6 +12,10 @@ class SetWayPointNode(Node):
         super().__init__("sub_node")
         self.create_subscription(Pose, "turtle1/pose",self.get_turtle_pose_callback,10)
         self.publisher=self.create_publisher(Twist, "turtle1/cmd_vel", 10)
+
+        self.add_two_int_service=self.create_service(SetWayPoint, "set_way_point_server",
+                                                      self.set_way_point_callback)
+
         self.create_timer(0.03, self.publish_cmd_callback)
         self.get_logger().info("Subscriber has started")
         self.turtle_pose=Pose()
@@ -19,7 +24,7 @@ class SetWayPointNode(Node):
 
     def get_turtle_pose_callback(self, msg):
         self.turtle_pose=msg
-        print(self.turtle_pose.x)
+        # print(self.turtle_pose.x)
     
     def compute_desired_theta(self):
         return math.atan2(self.waypoint[1]-self.turtle_pose.y, self.waypoint[0]-self.turtle_pose.x)
@@ -32,16 +37,22 @@ class SetWayPointNode(Node):
         return math.sqrt((self.waypoint[0]-self.turtle_pose.x)**2+(self.waypoint[1]-self.turtle_pose.y)**2)
     
     def publish_cmd_callback(self):
-        Kp=2
+        Kp=5
         Kpl=0.8
         error_head  =self.compute_heading_error()
         error_dist=self.compute_linear_error()
-        print(error_dist)
+        # print(error_dist)
         msg=Twist()
         if(error_dist>self.distance_tolerance):
             msg.angular.z=Kp*error_head
             msg.linear.x=Kpl*error_dist
         self.publisher.publish(msg)
+
+    def set_way_point_callback(self,request, response):
+        self.waypoint[0]=request.x
+        self.waypoint[1]=request.y
+        response.res=True
+        return response
 
 def main(args=None):
     rclpy.init(args=args)
