@@ -15,6 +15,7 @@ class SetWayPointNode(Node):
         self.get_logger().info("Subscriber has started")
         self.turtle_pose=Pose()
         self.waypoint=[7, 7]
+        self.distance_tolerance=0.1
 
     def get_turtle_pose_callback(self, msg):
         self.turtle_pose=msg
@@ -27,12 +28,21 @@ class SetWayPointNode(Node):
         theta_desire=self.compute_desired_theta()
         return math.atan(math.tan((theta_desire-self.turtle_pose.theta)/2))
     
+    def compute_linear_error(self):
+        return math.sqrt((self.waypoint[0]-self.turtle_pose.x)**2+(self.waypoint[1]-self.turtle_pose.y)**2)
+    
     def publish_cmd_callback(self):
-        Kp=0.5
-        error=self.compute_heading_error()
+        Kp=2
+        Kpl=0.8
+        error_head  =self.compute_heading_error()
+        error_dist=self.compute_linear_error()
+        print(error_dist)
         msg=Twist()
-        msg.angular.z=Kp*error
+        if(error_dist>self.distance_tolerance):
+            msg.angular.z=Kp*error_head
+            msg.linear.x=Kpl*error_dist
         self.publisher.publish(msg)
+
 def main(args=None):
     rclpy.init(args=args)
     node = SetWayPointNode()
