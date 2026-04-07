@@ -24,6 +24,11 @@ class SetWayPointNode(Node):
         self.waypoint=[7, 7]
         self.distance_tolerance=0.1
 
+        self.declare_parameter("Kp", 5.0)
+        self.declare_parameter("Kpl", 0.8)
+        self.Kp = self.get_parameter("Kp").value
+        self.Kpl = self.get_parameter("Kpl").value
+
     def get_turtle_pose_callback(self, msg):
         self.turtle_pose=msg
         # print(self.turtle_pose.x)
@@ -39,16 +44,14 @@ class SetWayPointNode(Node):
         return math.sqrt((self.waypoint[0]-self.turtle_pose.x)**2+(self.waypoint[1]-self.turtle_pose.y)**2)
     
     def publish_cmd_callback(self):
-        Kp=5
-        Kpl=0.8
         error_head  =self.compute_heading_error()
         error_dist=self.compute_linear_error()
         # print(error_dist)
         msg=Twist()
         is_moving_msg=Bool()
         if(error_dist>self.distance_tolerance):
-            msg.angular.z=Kp*error_head
-            msg.linear.x=Kpl*error_dist
+            msg.angular.z=self.Kp*error_head
+            msg.linear.x=self.Kpl*error_dist
             is_moving_msg.data=True
         self.publisher.publish(msg)
         self.moving_publisher.publish(is_moving_msg)
@@ -57,7 +60,8 @@ class SetWayPointNode(Node):
         self.waypoint[0]=request.x
         self.waypoint[1]=request.y
         response.res=True
-        self.get_logger().info(f"request receive: ({request.x}, {request.y})")
+        self.get_logger().info(f"request receive: ({request.x}, {request.y}, {self.Kp}, {self.Kpl})")
+
         return response
 
 def main(args=None):
