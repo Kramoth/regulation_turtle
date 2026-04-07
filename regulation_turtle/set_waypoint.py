@@ -57,6 +57,7 @@ class SetWayPointNode(Node):
         self.waypoint[0]=request.x
         self.waypoint[1]=request.y
         response.res=True
+        self.get_logger().info(f"request receive: ({request.x}, {request.y})")
         return response
 
 def main(args=None):
