@@ -2,7 +2,7 @@
 
 > Régulation de trajectoire avec ROS 2 — contrôle par waypoints pour turtlesim
 
-![ROS2](https://img.shields.io/badge/ROS_2-Humble-green?style=flat-square)
+![ROS2](https://img.shields.io/badge/ROS_2-jazzy-green?style=flat-square)
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=flat-square)
 ![License](https://img.shields.io/badge/Licence-MIT-lightgrey?style=flat-square)
 
