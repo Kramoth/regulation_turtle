@@ -4,7 +4,8 @@ import rclpy
 from rclpy.node import Node
 from turtlesim.msg import Pose
 from geometry_msgs.msg import Twist
-from turtle_interfaces.srv import SetWayPoint    
+from turtle_interfaces.srv import SetWayPoint 
+from std_msgs.msg import Bool   
 import math
     
 class SetWayPointNode(Node):
@@ -12,6 +13,7 @@ class SetWayPointNode(Node):
         super().__init__("sub_node")
         self.create_subscription(Pose, "turtle1/pose",self.get_turtle_pose_callback,10)
         self.publisher=self.create_publisher(Twist, "turtle1/cmd_vel", 10)
+        self.moving_publisher=self.create_publisher(Bool, "turtle1/is_moving", 10)
 
         self.add_two_int_service=self.create_service(SetWayPoint, "set_way_point_server",
                                                       self.set_way_point_callback)
@@ -43,10 +45,13 @@ class SetWayPointNode(Node):
         error_dist=self.compute_linear_error()
         # print(error_dist)
         msg=Twist()
+        is_moving_msg=Bool()
         if(error_dist>self.distance_tolerance):
             msg.angular.z=Kp*error_head
             msg.linear.x=Kpl*error_dist
+            is_moving_msg.data=True
         self.publisher.publish(msg)
+        self.moving_publisher.publish(is_moving_msg)
 
     def set_way_point_callback(self,request, response):
         self.waypoint[0]=request.x
