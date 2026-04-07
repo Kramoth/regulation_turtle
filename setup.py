@@ -24,7 +24,9 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            "set_way_point_node=regulation_turtle.set_waypoint:main"
+            "set_way_point_node=regulation_turtle.set_waypoint:main",
+            "set_way_point_client_node=regulation_turtle.set_waypoint_client:main"
+
         ],
     },
 )
