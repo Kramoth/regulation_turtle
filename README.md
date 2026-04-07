@@ -62,5 +62,5 @@ ros2 run regulation_turtle set_way_point_client_node
 
 | Paramètre | Description | Défaut |
 |-----------|-------------|--------|
-| `Kpl` | Gain proportionnel linéaire | `0.5` |
-| `Kp`  | Gain proportionnel angulaire | `20.0` |
+| `Kpl` | Gain proportionnel linéaire | `0.8` |
+| `Kp`  | Gain proportionnel angulaire | `5.0` |
