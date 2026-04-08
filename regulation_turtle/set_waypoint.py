@@ -21,8 +21,10 @@ class SetWayPointNode(Node):
         self.create_timer(0.03, self.publish_cmd_callback)
         self.get_logger().info("Subscriber has started")
         self.turtle_pose=Pose()
-        self.waypoint=[7, 7]
-        self.distance_tolerance=0.1
+        # self.waypoint=[7, 7]
+        self.waypoint=[0,0]
+        self.is_waypoint_set=False
+        self.distance_tolerance=0.5
 
         self.declare_parameter("Kp", 5.0)
         self.declare_parameter("Kpl", 0.8)
@@ -44,19 +46,24 @@ class SetWayPointNode(Node):
         return math.sqrt((self.waypoint[0]-self.turtle_pose.x)**2+(self.waypoint[1]-self.turtle_pose.y)**2)
     
     def publish_cmd_callback(self):
-        error_head  =self.compute_heading_error()
-        error_dist=self.compute_linear_error()
-        # print(error_dist)
-        msg=Twist()
+
         is_moving_msg=Bool()
-        if(error_dist>self.distance_tolerance):
-            msg.angular.z=self.Kp*error_head
-            msg.linear.x=self.Kpl*error_dist
-            is_moving_msg.data=True
+        msg=Twist()
+        if self.is_waypoint_set:
+            error_head  =self.compute_heading_error()
+            error_dist=self.compute_linear_error()
+            # print(error_dist)
+            msg=Twist()
+            is_moving_msg=Bool()
+            if(error_dist>self.distance_tolerance):
+                msg.angular.z=self.Kp*error_head
+                msg.linear.x=self.Kpl*error_dist
+                is_moving_msg.data=True
         self.publisher.publish(msg)
         self.moving_publisher.publish(is_moving_msg)
 
     def set_way_point_callback(self,request, response):
+        self.is_waypoint_set=True
         self.waypoint[0]=request.x
         self.waypoint[1]=request.y
         response.res=True
