@@ -24,7 +24,7 @@ class SetWayPointNode(Node):
         # self.waypoint=[7, 7]
         self.waypoint=[0,0]
         self.is_waypoint_set=False
-        self.distance_tolerance=1.0
+        self.distance_tolerance=0.5
 
         self.declare_parameter("Kp", 5.0)
         self.declare_parameter("Kpl", 0.8)
@@ -38,13 +38,13 @@ class SetWayPointNode(Node):
     def compute_desired_theta(self):
         return math.atan2(self.waypoint[1]-self.turtle_pose.y, self.waypoint[0]-self.turtle_pose.x)
     
-    # def compute_heading_error(self):
-    #     theta_desire=self.compute_desired_theta()
-    #     return math.atan(math.tan((theta_desire-self.turtle_pose.theta)/2))
-    
     def compute_heading_error(self):
-        theta_desire = self.compute_desired_theta()
-        return math.atan2(math.sin(theta_desire - self.turtle_pose.theta),math.cos(theta_desire - self.turtle_pose.theta))
+        theta_desire=self.compute_desired_theta()
+        return math.atan(math.tan((theta_desire-self.turtle_pose.theta)/2))
+    
+    # def compute_heading_error(self):
+    #     theta_desire = self.compute_desired_theta()
+    #     return math.atan2(math.sin(theta_desire - self.turtle_pose.theta),math.cos(theta_desire - self.turtle_pose.theta))
     
     def compute_linear_error(self):
         return math.sqrt((self.waypoint[0]-self.turtle_pose.x)**2+(self.waypoint[1]-self.turtle_pose.y)**2)

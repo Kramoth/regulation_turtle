@@ -2,6 +2,7 @@
 import rclpy
 from rclpy.node import Node
 from turtlesim.msg import Pose
+import math
 import random
     
 class NoiseNode(Node):
@@ -13,19 +14,29 @@ class NoiseNode(Node):
         self.declare_parameter("alpha", 0.2)
         self.alpha = self.get_parameter("alpha").value
         self.old_pose=Pose()
+        self.cos_prev=0
+        self.sin_prev=0
         self.init_old_pose=False
 
     def sub_callback(self, msg):
         if not self.init_old_pose:
             self.old_pose=msg
             self.init_old_pose=True
+            self.cos_prev=math.cos(msg.theta)
+            self.sin_prev=math.sin(msg.theta)
             return
         
         filtered_pose=Pose()
         filtered_pose.x=self.alpha*msg.x+(1-self.alpha)*self.old_pose.x
         filtered_pose.y=self.alpha*msg.y+(1-self.alpha)*self.old_pose.y
-        filtered_pose.theta=self.alpha*msg.x+(1-self.alpha)*self.old_pose.theta
+        cos_f = self.alpha*math.cos(msg.theta)+(1-self.alpha)*self.cos_prev
+        sin_f = self.alpha*math.sin(msg.theta)+(1 -self.alpha)*self.sin_prev
+        theta_filtered = math.atan2(sin_f, cos_f)
+        # filtered_pose.theta=self.alpha*msg.theta+(1-self.alpha)*self.old_pose.theta
+        filtered_pose.theta=theta_filtered
         self.old_pose=filtered_pose
+        self.cos_prev=cos_f
+        self.sin_prev=sin_f
         self.publisher.publish(filtered_pose)
     
 def main(args=None):
