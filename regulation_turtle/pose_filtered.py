@@ -7,7 +7,7 @@ import random
     
 class NoiseNode(Node):
     def __init__(self):
-        super().__init__("sub_node")
+        super().__init__("low_pass_filter_node")
         self.create_subscription(Pose, "turtle1/noisy_pose",self.sub_callback,10)
         self.publisher=self.create_publisher(Pose, "turtle1/pose_filtered", 10)
         self.get_logger().info("Subscriber has started")

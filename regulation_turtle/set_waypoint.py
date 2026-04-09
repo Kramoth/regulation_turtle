@@ -10,7 +10,7 @@ import math
     
 class SetWayPointNode(Node):
     def __init__(self):
-        super().__init__("sub_node")
+        super().__init__("set_way_point_node")
         self.create_subscription(Pose, "turtle1/pose",self.get_turtle_pose_callback,10)
         self.publisher=self.create_publisher(Twist, "turtle1/cmd_vel", 10)
         self.moving_publisher=self.create_publisher(Bool, "turtle1/is_moving", 10)
