@@ -8,8 +8,8 @@ import random
 class NoiseNode(Node):
     def __init__(self):
         super().__init__("add_noise_node")
-        self.create_subscription(Pose, "turtle1/pose",self.sub_callback,10)
-        self.publisher=self.create_publisher(Pose, "turtle1/noisy_pose", 10)
+        self.create_subscription(Pose, "pose",self.sub_callback,10)
+        self.publisher=self.create_publisher(Pose, "noisy_pose", 10)
         self.get_logger().info("Subscriber has started")
         self.declare_parameter("noise_min", 0.0)
         self.declare_parameter("noise_max", 0.5)

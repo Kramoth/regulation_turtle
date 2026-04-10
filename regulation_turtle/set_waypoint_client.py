@@ -11,7 +11,7 @@ class SetWaypointClient(Node):
         super().__init__("set_waypoint_client")
 
         self.client = self.create_client(SetWayPoint, "set_way_point_server")
-        self.create_subscription(Bool, "turtle1/is_moving", self.update_is_moving_state, 10)
+        self.create_subscription(Bool, "is_moving", self.update_is_moving_state, 10)
 
         self.is_moving = None
         self.request_in_progress = False

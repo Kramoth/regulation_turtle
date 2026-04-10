@@ -8,8 +8,8 @@ import random
 class NoiseNode(Node):
     def __init__(self):
         super().__init__("low_pass_filter_node")
-        self.create_subscription(Pose, "turtle1/noisy_pose",self.sub_callback,10)
-        self.publisher=self.create_publisher(Pose, "turtle1/pose_filtered", 10)
+        self.create_subscription(Pose, "noisy_pose",self.sub_callback,10)
+        self.publisher=self.create_publisher(Pose, "pose_filtered", 10)
         self.get_logger().info("Subscriber has started")
         self.declare_parameter("alpha", 0.2)
         self.alpha = self.get_parameter("alpha").value
@@ -32,7 +32,6 @@ class NoiseNode(Node):
         cos_f = self.alpha*math.cos(msg.theta)+(1-self.alpha)*self.cos_prev
         sin_f = self.alpha*math.sin(msg.theta)+(1 -self.alpha)*self.sin_prev
         theta_filtered = math.atan2(sin_f, cos_f)
-        # filtered_pose.theta=self.alpha*msg.theta+(1-self.alpha)*self.old_pose.theta
         filtered_pose.theta=theta_filtered
         self.old_pose=filtered_pose
         self.cos_prev=cos_f

@@ -11,9 +11,9 @@ import math
 class SetWayPointNode(Node):
     def __init__(self):
         super().__init__("set_way_point_node")
-        self.create_subscription(Pose, "turtle1/pose",self.get_turtle_pose_callback,10)
-        self.publisher=self.create_publisher(Twist, "turtle1/cmd_vel", 10)
-        self.moving_publisher=self.create_publisher(Bool, "turtle1/is_moving", 10)
+        self.create_subscription(Pose, "pose",self.get_turtle_pose_callback,10)
+        self.publisher=self.create_publisher(Twist, "cmd_vel", 10)
+        self.moving_publisher=self.create_publisher(Bool, "is_moving", 10)
 
         self.add_two_int_service=self.create_service(SetWayPoint, "set_way_point_server",
                                                       self.set_way_point_callback)
