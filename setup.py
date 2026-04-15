@@ -24,13 +24,13 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            "dead_reckoning_square=regulation_turtle.dead_reckoning:main",
             "set_way_point_node=regulation_turtle.set_waypoint:main",
             "set_way_point_client_node=regulation_turtle.set_waypoint_client:main",
             "random_walk_node=regulation_turtle.turtle_random_walk:main",
             "noisy_pose_publisher_node=regulation_turtle.noise_pose:main",
             "filtered_pose_publisher_node=regulation_turtle.pose_filtered:main",
             "spawn_wp_node=regulation_turtle.spawn_wp:main"
-
         ],
     },
 )
