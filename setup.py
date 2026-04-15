@@ -25,6 +25,7 @@ setup(
     entry_points={
         'console_scripts': [
             "dead_reckoning_square=regulation_turtle.dead_reckoning:main",
+            "close_loop_position_fb=regulation_turtle.close_loop_position_feedback:main",
             "set_way_point_node=regulation_turtle.set_waypoint:main",
             "set_way_point_client_node=regulation_turtle.set_waypoint_client:main",
             "random_walk_node=regulation_turtle.turtle_random_walk:main",

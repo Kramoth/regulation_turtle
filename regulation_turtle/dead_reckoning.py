@@ -14,12 +14,13 @@ class MoveSquareNode(Node):
         self.square_length=5
         self.start_x=3
         self.start_y=3
-        self.x=3
-        self.y=3
+        self.x=3.0
+        self.y=3.0
         self.start_theta=0
-        self.theta=0
+        self.theta=0.0
         self.dt=0.03
         self.cmd_pub=self.create_publisher(Twist, "cmd_vel", 10) 
+        self.pose_estm_pub=self.create_publisher(Pose, "pose_estimate", 10) 
         self.create_timer(self.dt, self.move_turtle)
 
     def update_pose(self, msg:Pose):
@@ -56,8 +57,12 @@ class MoveSquareNode(Node):
                 self.start_theta=self.theta
                 cmd_msg.linear.x=0.0
                 cmd_msg.angular.z=0.0
-
+        pose_estimate=Pose()
+        pose_estimate.x=self.x
+        pose_estimate.y=self.y
+        pose_estimate.theta=(self.theta + pi) % (2*pi) - pi
         self.cmd_pub.publish(cmd_msg)
+        self.pose_estm_pub.publish(pose_estimate)
 
     def teleport_turtle(self):
         client = self.create_client(TeleportAbsolute, "turtle1/teleport_absolute")
