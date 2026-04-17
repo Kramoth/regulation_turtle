@@ -48,14 +48,13 @@ ros2 run turtlesim turtlesim_node
 **Terminal 2** — Noeud de régulation
 ```sh
 source ~/turtle_ws/install/setup.bash
-ros2 run regulation_turtle set_way_point_node \
-  --ros-args -p Kpl:=0.5 -p Kp:=20.0
+ros2 run regulation_turtle set_way_point_node --ros-args -p Kpl:=0.5 -p Kp:=20.0 -r __ns:=/turtle1
 ```
 
 **Terminal 3** — Client waypoint
 ```sh
 source ~/turtle_ws/install/setup.bash
-ros2 run regulation_turtle set_way_point_client_node
+ros2 run regulation_turtle set_way_point_client_node -r __ns:=/turtle1
 ```
 
 ### Paramètres
